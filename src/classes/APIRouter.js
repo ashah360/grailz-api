@@ -4,9 +4,7 @@ const express = require('express');
 const jwtMiddleware = require('express-jwt');
 const cookieSession = require('cookie-session');
 
-const setUpAccountRoutes = require('../routers/Account.js');
 const setUpProductRoutes = require('../routers/Product.js');
-const setUpShopRoutes = require('../routers/Shop.js');
 
 class APIRouter {
 	constructor(api) {
@@ -34,9 +32,7 @@ class APIRouter {
 
 		this.setUpRoutes = this.setUpRoutes.bind(this);
 
-		this.setUpAccountRoutes = setUpAccountRoutes.bind(this);
 		this.setUpProductRoutes = setUpProductRoutes.bind(this);
-		this.setUpShopRoutes = setUpShopRoutes.bind(this);
 
 		api.get('/', (req, res) => {
 			return res.status(this.statusCodes.OK).json({ 
@@ -85,17 +81,11 @@ class APIRouter {
 			secret: process.env.COOKIE_SECRET
 		}));
 
-		const AccountRouter = express();
 		const ProductRouter = express();
-		const ShopRouter = express();
 
-		api.use('/account', AccountRouter);
 		api.use('/product', ProductRouter);
-		api.use('/shop', ShopRouter);
 
-		this.setUpAccountRoutes(AccountRouter);
 		this.setUpProductRoutes(ProductRouter);
-		this.setUpShopRoutes(ShopRouter);
 
 		api.all('*', (req, res) => {
 			return res.status(this.statusCodes.BAD_REQUEST).json({
